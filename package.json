@@ -1,0 +1,30 @@
+{
+  "name": "event-sourced-knowledge-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An event-sourced knowledge hub for synthetic Northwind Widgets runbooks.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "dev": "tsx src/server.ts",
+    "seed": "tsx scripts/seed.ts",
+    "replay": "tsx scripts/replay.ts",
+    "tf-validate": "terraform fmt -check -recursive infra && terraform -chdir=infra init -backend=false && terraform -chdir=infra validate"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.750.0",
+    "@aws-sdk/client-s3": "^3.750.0",
+    "@aws-sdk/lib-dynamodb": "^3.750.0",
+    "@aws-sdk/util-dynamodb": "^3.750.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  }
+}
