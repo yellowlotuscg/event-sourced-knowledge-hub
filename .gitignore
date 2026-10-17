@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+.env
+.DS_Store
+data/*.jsonl
+data/*.json
+lambda.zip

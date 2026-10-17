@@ -1,0 +1,14 @@
+services:
+  localstack:
+    image: localstack/localstack:4.2
+    ports:
+      - "4566:4566"
+    environment:
+      SERVICES: dynamodb,s3,lambda,apigateway,iam,cloudwatch,logs
+      AWS_DEFAULT_REGION: us-east-1
+      DEBUG: "0"
+    volumes:
+      - "localstack-data:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+volumes:
+  localstack-data:

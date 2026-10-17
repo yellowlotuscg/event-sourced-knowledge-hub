@@ -1,0 +1,21 @@
+import { readFile } from 'node:fs/promises';
+import { JsonlEventStore } from '../src/stores.js';
+import { InMemoryProjectionStore } from '../src/projections.js';
+import { sha256Text, stableJson } from '../src/stable.js';
+
+const eventsPath = process.env.EVENT_LOG ?? 'data/events.jsonl';
+const projectionsPath = process.env.PROJECTIONS_FILE ?? 'data/live-projections.json';
+const store = new JsonlEventStore(eventsPath);
+const events = await store.getAllEvents();
+if (events.length === 0) throw new Error('No events found. Run npm run seed first.');
+const rebuilt = new InMemoryProjectionStore();
+await rebuilt.rebuild(events);
+const replayed = `${stableJson(await rebuilt.snapshot())}\n`;
+const live = await readFile(projectionsPath, 'utf8');
+const replayHash = sha256Text(replayed);
+const liveHash = sha256Text(live);
+console.log(`replayed ${events.length} events from zero`);
+console.log(`live sha256:   ${liveHash}`);
+console.log(`replay sha256: ${replayHash}`);
+if (replayed !== live) throw new Error('Replay mismatch: projection bytes differ from live projections');
+console.log('Replay verified: projection bytes are identical.');
